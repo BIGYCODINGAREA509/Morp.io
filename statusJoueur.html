@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Match ki jwe yo — Morp.io HT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+@font-face{font-family:'Early Quake';src:url('fonts/EarlyQuakeDEMO.otf') format('opentype');font-display:swap}
+:root{--cream:#efede5;--green:#4cd964}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--cream);color:#000;font-family:'Poppins',sans-serif}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px clamp(18px,5vw,72px);background:#000}
+.logo{color:var(--cream);font-family:'Early Quake','Arial Black',sans-serif;font-size:30px;font-weight:900;line-height:.9;text-decoration:none}
+.back{display:inline-flex;align-items:center;min-height:46px;padding:0 18px;border:1px solid var(--cream);border-radius:16px;color:var(--cream);text-decoration:none;font-size:13px;font-weight:900}
+main{width:min(1180px,100%);margin:0 auto;padding:clamp(24px,5vw,58px) clamp(16px,4vw,48px) 60px}
+.intro{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:26px;flex-wrap:wrap}
+h1{margin:0;font-size:clamp(28px,5vw,52px);font-weight:900;letter-spacing:-.04em}.intro p{margin:8px 0 0;color:#444;font-weight:500}
+.refresh{min-height:46px;padding:0 20px;border:0;border-radius:16px;background:#000;color:var(--green);font:900 14px 'Poppins';cursor:pointer}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:30px}
+.stat{padding:18px 22px;border:1px solid rgba(0,0,0,.1);border-radius:24px;background:rgba(255,255,255,.6)}
+.stat span{display:block;color:#444;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.stat strong{display:block;font-size:32px;font-weight:900}
+.stat.top-player strong{font-size:clamp(17px,2vw,25px);overflow-wrap:anywhere}
+.panel{margin-top:24px;overflow:hidden;border:1px solid rgba(0,0,0,.1);border-radius:26px;background:rgba(255,255,255,.6)}
+.panel-head{padding:19px 22px;border-bottom:1px solid rgba(0,0,0,.12)}h2{margin:0;font-size:21px;font-weight:900}.panel-head p{margin:4px 0 0;color:#555;font-size:13px}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;text-align:left}
+th,td{padding:14px 18px;border-bottom:1px solid rgba(0,0,0,.09);white-space:nowrap}
+th{background:rgba(0,0,0,.04);font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}td{font-size:14px;font-weight:500}
+tbody tr:last-child td{border-bottom:0}.pn{font-weight:900}.wins{color:#147a29;font-weight:900}.empty{text-align:center;color:#555;padding:26px}
+td.m{white-space:normal;min-width:260px}.m b{font-weight:900}.tag{display:inline-block;margin-left:6px;padding:2px 9px;border-radius:99px;background:#000;color:#fff;font-size:11px;font-weight:900}
+.message{margin:18px 0;padding:14px 18px;border-radius:14px;background:#fff0f0;color:#9b0000;font-size:14px;font-weight:600}[hidden]{display:none!important}
+@media(max-width:640px){.topbar{padding:16px}.logo{font-size:24px}.back{font-size:11px;padding:0 12px}.summary{grid-template-columns:repeat(2,1fr);gap:8px}.stat{padding:13px 12px;border-radius:17px}.stat span{font-size:9px}.stat strong{font-size:25px}.panel{border-radius:20px}th,td{padding:12px 12px}}
+</style>
+</head>
+<body>
+<header class="topbar"><a class="logo" href="index.html">MORP.IO</a><a class="back" href="index.html">RETOUNEN NAN JWÈT LA</a></header>
+<main>
+ <section class="intro"><div><h1>Statistik chak jwèt yo</h1><p>Rezilta ak istorik pou tout match ki fèt deja yo.</p></div><button class="refresh" id="refresh" type="button">Rafrechi</button></section>
+ <p class="message" id="error" role="alert" hidden></p>
+ <section class="summary"><div class="stat"><span>Match ki fini yo</span><strong id="c1">-</strong></div><div class="stat"><span>Kantite Jwè</span><strong id="cPlayers">-</strong></div><div class="stat top-player"><span>Pi gwo jwè a</span><strong id="cTop">-</strong></div></section>
+ <section class="panel"><div class="panel-head"><h2>Tout Jwè Yo</h2><p>Sa a se lis tout joueur nou genyen ki valide yo.</p></div><div class="table-wrap"><table><thead><tr><th>Rang</th><th>Jwè</th><th>Match fini</th><th>Viktwa</th><th>Defèt</th></tr></thead><tbody id="players"></tbody></table></div></section>
+ <section class="panel" id="todayPanel" hidden><div class="panel-head"><h2>Match jounen an</h2><p>Match ki fini jodi a.</p></div><div class="table-wrap"><table><thead><tr><th>Match</th><th>Kou</th><th>Dat</th></tr></thead><tbody id="today"></tbody></table></div></section>
+ <section class="panel"><div class="panel-head"><h2>Rezime match yo</h2><p>Chak match: jwè yo, ki moun ki genyen, kantite kou ak dat match la fini.</p></div><div class="table-wrap"><table><thead><tr><th>Match</th><th>Kou</th><th>Dat</th></tr></thead><tbody id="matches"></tbody></table></div></section>
+</main>
+<script>
+const db=window.supabase.createClient("https://hpviwykrlmqwjfnybrtk.supabase.co","sb_publishable_63pfFdujvsSGlZcVBJWv3Q_EFXmd2w7");
+const $=s=>document.querySelector(s);
+const TZ='America/Port-au-Prince';
+const fmt=d=>new Date(d).toLocaleString('ht-HT',{dateStyle:'medium',timeStyle:'short',timeZone:TZ});
+function dayKey(d){const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(d)).map(x=>[x.type,x.value]));return `${p.year}-${p.month}-${p.day}`}
+function cell(r,v,cls){const c=document.createElement('td');c.textContent=v;if(cls)c.className=cls;r.appendChild(c);return c}
+function empty(tb,n,t){const r=document.createElement('tr'),c=document.createElement('td');c.className='empty';c.colSpan=n;c.textContent=t;r.appendChild(c);tb.replaceChildren(r)}
+async function all(q,order){const out=[];for(let o=0;;o+=1000){const{data,error}=await order(db.from(q.t).select(q.s)).range(o,o+999);if(error)throw error;out.push(...data);if(data.length<1000)break}return out}
+async function load(){
+  const btn=$('#refresh'),eb=$('#error');btn.disabled=true;eb.hidden=true;
+  try{
+    const[games,stats]=await Promise.all([
+      all({t:'match_history',s:'id,p1_name,p2_name,winner_name,winner_mark,finish_reason,move_count,finished_at'},q=>q.order('finished_at',{ascending:false}).order('id',{ascending:false})),
+      all({t:'player_stats',s:'name,matches,wins,registered'},q=>q.order('name'))]);
+    const rank=stats.filter(p=>p.registered).sort((a,b)=>b.wins-a.wins||(a.matches-a.wins)-(b.matches-b.wins)||b.matches-a.matches||a.name.localeCompare(b.name,'ht'));
+    const top=rank.find(p=>p.wins>0);
+    $('#c1').textContent=games.length;$('#cPlayers').textContent=rank.length;
+    $('#cTop').textContent=top?`${top.name} (${top.wins} viktwa)`:'Poko gen viktwa';
+    const pt=$('#players');
+    if(!rank.length)empty(pt,5,'Pa gen jwè ki anrejistre ak imel.');
+    else{const f=document.createDocumentFragment();rank.forEach((p,i)=>{const r=document.createElement('tr');cell(r,i+1);cell(r,p.name,'pn');cell(r,p.matches);cell(r,p.wins,'wins');cell(r,p.matches-p.wins);f.appendChild(r)});pt.replaceChildren(f)}
+    const today=games.filter(g=>dayKey(g.finished_at)===dayKey(Date.now()));
+    $('#todayPanel').hidden=!today.length;
+    const tt=$('#today');
+    if(today.length){const f=document.createDocumentFragment();today.forEach(g=>{const r=document.createElement('tr'),c=cell(r,'','m');
+      c.append(`${g.p1_name} VS ${g.p2_name} - `);const b=document.createElement('b');b.textContent=`${g.winner_name} Genyen`;c.append(b);
+      if(g.finish_reason!=='win'){const t=document.createElement('span');t.className='tag';t.textContent=g.finish_reason==='forfeit'?'Forfeit':'Tan fini';c.append(t)}
+      cell(r,g.move_count);cell(r,fmt(g.finished_at));f.appendChild(r)});tt.replaceChildren(f)}
+    else tt.replaceChildren();
+    const mt=$('#matches');
+    if(!games.length)empty(mt,3,'Pa gen match fini ki anrejistre pou kounye a.');
+    else{const f=document.createDocumentFragment();games.forEach(g=>{const r=document.createElement('tr'),c=cell(r,'','m');
+      c.append(`${g.p1_name} VS ${g.p2_name} - `);const b=document.createElement('b');b.textContent=`${g.winner_name} Genyen`;c.append(b);
+      if(g.finish_reason!=='win'){const t=document.createElement('span');t.className='tag';t.textContent=g.finish_reason==='forfeit'?'Forfeit':'Tan fini';c.append(t)}
+      cell(r,g.move_count);cell(r,fmt(g.finished_at));f.appendChild(r)});mt.replaceChildren(f)}
+  }catch(e){eb.textContent='Statistik yo poko ka load. '+(e.message||'Tanpri eseye ankò.');eb.hidden=false;['#c1','#cPlayers','#cTop'].forEach(s=>$(s).textContent='-');$('#todayPanel').hidden=true;empty($('#players'),5,'Pa disponib.');empty($('#matches'),3,'Pa disponib.')}
+  btn.disabled=false;
+}
+$('#refresh').onclick=load;load();
+</script>
+</body>
+</html>

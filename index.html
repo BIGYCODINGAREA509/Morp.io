@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#efede5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/Image1.jpg">
+<title>Morp.io HT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+@font-face{font-family:'Early Quake';src:url('fonts/EarlyQuakeDEMO.otf') format('opentype');font-display:swap}
+:root{--cream:#efede5;--green:#4cd964;--red:#c40000;--cell:44px;--glass:rgba(239,237,229,.6)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:'Poppins',sans-serif;background:var(--cream);color:#000;overflow:hidden}
+button{font-family:inherit}
+[hidden]{display:none!important}
+.logo{font-family:'Early Quake','Arial Black',sans-serif;font-weight:900;line-height:.9;position:relative;display:inline-block}
+.logo sup{font-family:'Poppins';font-weight:900;font-size:.1em;position:absolute;top:.1em;right:-.5em}
+.screen{display:none;height:100dvh}.screen.on{display:grid}
+.split{grid-template-columns:42% 1fr}
+.photo{background:#000 url(assets/chalk.jpg) center/cover;position:relative}
+.photo .logo{position:absolute;top:28px;left:28px;font-size:34px;color:var(--cream)}
+.pane{position:relative;overflow:auto;padding:5vh 4vw 130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vh}
+.pane>*{flex:none}
+.big{font-size:clamp(56px,10vw,170px)}
+.sub{font-weight:600;font-size:clamp(14px,1.5vw,24px);text-align:center}
+.glass{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.65);box-shadow:0 18px 50px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.7)}
+.card{width:min(760px,100%);border-radius:44px;padding:26px 30px;position:relative}
+.card h2{font-weight:900;font-size:clamp(22px,2.6vw,34px);text-align:center}
+.card .hint{text-align:center;font-size:14px;margin:6px 0 14px;border-bottom:3px solid rgba(0,0,0,.15);padding-bottom:12px}
+label{display:block;font-weight:900;font-size:15px;margin:10px 0 6px 12px;text-transform:uppercase}
+.inp{display:flex;align-items:center;background:rgba(255,255,255,.9);border:2px solid #000;border-radius:22px;height:58px;padding:0 22px}
+.inp input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:600 18px 'Poppins'}
+.amount-unit{font-weight:900;white-space:nowrap}
+.inp.up input{text-transform:uppercase;font-weight:900}
+.row2{display:flex;gap:14px;align-items:stretch;margin-top:16px;flex-wrap:wrap}
+.row2>*{flex:1 1 200px}
+.bk{border:0;border-radius:18px;min-height:60px;padding:0 20px;font:900 17px 'Poppins';cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;transition:transform .15s}
+.bk:active{transform:scale(.97)}.bk:disabled{opacity:.45;cursor:wait}
+.bk.dark{background:#000;color:var(--cream)}.bk.ok{background:#05b25a;color:#fff;font-size:22px}.bk.gl{background:#000;color:#fff}
+.bk.red{background:var(--red);color:#fff}.bk.lite{background:#fff;color:#000;border:2px solid #000}
+.lnk{background:none;border:0;text-decoration:underline;font:500 16px 'Poppins';cursor:pointer;margin-top:10px}
+.info-b{position:absolute;top:22px;right:26px;width:46px;height:46px;border-radius:50%;background:#000;color:#fff;border:0;font:900 22px 'Poppins';cursor:pointer}
+.msg{font-size:14px;min-height:20px;margin-top:8px;color:#9b0000;font-weight:600;text-align:center}
+.actions{position:fixed;right:2vw;bottom:2.5vh;display:flex;gap:14px;z-index:5}
+.btn{display:flex;align-items:center;gap:18px;border:0;border-radius:22px;height:62px;padding:0 26px;background:#000;color:var(--cream);font:900 20px 'Poppins';cursor:pointer;text-transform:uppercase;box-shadow:0 10px 26px rgba(0,0,0,.3);transition:transform .15s}
+.btn:active{transform:scale(.97)}.btn:disabled{opacity:.4}
+.btn b{color:var(--green)}
+.btn i{width:38px;height:38px;border-radius:50%;background:var(--cream);display:grid;place-items:center;font-style:normal;color:#000}
+.back{position:absolute!important;top:28px;left:28px;display:flex;gap:12px;align-items:center;font-weight:900;font-size:20px;background:none;border:0;cursor:pointer}
+/* home */
+.hhead{display:flex;gap:18px;align-items:center;border-bottom:3px solid rgba(0,0,0,.15);padding-bottom:16px;flex-wrap:wrap}
+.me{flex:1 1 280px;display:flex;gap:16px;align-items:center;background:#fff;border-radius:999px;padding:10px 24px 10px 10px;cursor:pointer;border:0;text-align:left;min-width:0}
+.av{width:62px;height:62px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;flex:none;border:2px solid #eee;position:relative}
+.av img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.me h3{font-weight:900;font-size:clamp(20px,2.4vw,32px)}.me h3 span{color:#05b25a}.me small{font-size:14px;font-weight:500}
+.champ{flex:1 1 260px;background:#fff;border-radius:999px;padding:10px 24px 10px 14px;display:flex;align-items:center;gap:14px;border:0;font:900 18px 'Poppins';cursor:pointer;text-align:left;min-height:64px}
+.champ.static{cursor:default;color:#05b25a}
+.ic{position:relative;display:grid;place-items:center;width:56px;height:56px;flex:none;font-size:34px}
+.ic img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+.tile{background:#fff;border:0;border-radius:34px;padding:20px 12px 16px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;box-shadow:0 8px 22px rgba(0,0,0,.12);font-family:inherit;transition:transform .15s}
+.tile:hover{transform:translateY(-3px)}
+.tile .ic{width:clamp(70px,9vw,130px);height:clamp(70px,9vw,130px);font-size:clamp(46px,6vw,84px)}
+.tile h4{font-weight:900;font-size:clamp(15px,1.9vw,26px);text-align:center}
+.tile hr{width:90%;border:0;border-top:3px solid #000}.tile p{font-size:clamp(11px,1.2vw,16px);text-align:center;text-transform:uppercase}
+.dot{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:var(--green)}
+.hfoot{display:flex;gap:20px;align-items:center;margin-top:18px;border-top:3px solid #000;padding-top:16px;flex-wrap:wrap}
+.hfoot .bk{flex:1 1 220px;background:#fff;color:#000;font-size:clamp(14px,1.6vw,22px);min-height:56px;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.hfoot p{flex:1 1 220px;font-size:13px;font-weight:600}
+.top-r{position:absolute;top:18px;right:22px;display:flex;gap:10px;z-index:3}
+.top-r button{border:2px solid #000;background:transparent;border-radius:14px;padding:8px 14px;font:900 12px 'Poppins';cursor:pointer;position:relative}
+.top-r .wa-group{width:38px;height:38px;border-radius:12px;background:#25d366;color:#fff;display:grid;place-items:center}
+.top-r .wa-group svg{width:23px;height:23px;display:block}
+.auth-wa-group{position:absolute;top:22px;right:82px;width:46px;height:46px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;z-index:2}
+.auth-wa-group svg{width:27px;height:27px;display:block}
+.top-r .n{position:absolute;top:-8px;right:-8px;background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;display:grid;place-items:center}
+/* generic lists */
+.list{display:flex;flex-direction:column;gap:10px;margin-top:14px;text-align:left}
+.item{background:#fff;border-radius:22px;padding:14px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.item b{font-weight:900}.item small{display:block;color:#555}
+.chat-log{display:flex;flex-direction:column;gap:8px;max-height:46vh;overflow:auto;padding:6px;margin:12px 0;text-align:left}
+.chat-message{max-width:88%;padding:10px 14px;border-radius:18px;background:#fff;overflow-wrap:anywhere;white-space:pre-wrap}
+.chat-message.admin{align-self:flex-start;border-bottom-left-radius:5px}
+.chat-message.player{align-self:flex-end;background:#c9f7d1;border-bottom-right-radius:5px}
+.chat-message.public{align-self:flex-start}
+.chat-message.public.mine{align-self:flex-end;background:#c9f7d1;border-bottom-right-radius:5px}
+.chat-message.public strong{display:block;font-size:12px;margin-bottom:3px}
+.chat-message small{display:block;color:#555;font-size:10px;margin-top:4px}
+.chat-empty{color:#666;text-align:center;padding:18px 8px}
+.chat-compose{width:100%;min-height:74px;padding:12px;border:2px solid #000;border-radius:16px;font:500 14px 'Poppins';resize:vertical}
+.message-tabs{display:flex;gap:8px;margin:4px 0 10px}
+.message-tab{flex:1;border:2px solid #000;border-radius:14px;min-height:42px;background:#fff;font:900 12px 'Poppins';cursor:pointer}
+.message-tab.active{background:#000;color:#fff}
+.push-controls{margin:8px 0 12px;text-align:left}
+.push-controls p{font-size:12px;margin:0 0 6px}
+.push-controls .bk{min-height:44px;font-size:13px}
+.pill{border-radius:999px;padding:4px 12px;font:900 12px 'Poppins';color:#fff}.pill.w{background:#05b25a}.pill.l{background:var(--red)}
+.stats3{display:flex;gap:10px;margin-top:12px}.stats3 div{flex:1;background:#fff;border-radius:18px;padding:10px;text-align:center;font-size:12px;font-weight:900}.stats3 strong{display:block;font-size:26px}
+.tcard{background:#d9d9d9;border-radius:26px;padding:18px 20px;text-align:left;font-size:14px}
+.tcard h3{font-size:22px;font-weight:900}.tcard h3 span{color:#05b25a}
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.slot{background:#fff;border-radius:16px;padding:10px 14px;font-weight:900;display:flex;justify-content:space-between;align-items:center;gap:6px;min-width:0;overflow:hidden}
+.slot.off{color:#aaa;font-weight:500}.slot i{width:22px;height:22px;border-radius:7px;background:#05b25a;flex:none}.slot i.p{background:#f5a300}
+/* pay */
+.pay{width:min(700px,100%);border-radius:56px;padding:28px 26px;background:rgba(0,0,0,.9);color:#fff;text-align:center}
+.pay h3{font-weight:900;font-size:28px}.pay p{font-size:15px;margin:10px 0 4px}
+.num{font-weight:600;font-size:clamp(30px,5vw,54px)}
+.prow{display:grid;grid-template-columns:1.3fr 1fr;gap:10px;background:#fff;border-radius:26px;padding:10px;margin-top:12px;color:#000;text-align:left}
+.prow>div{border-radius:18px;padding:10px 16px;font-weight:900;min-width:0}
+.prow small{display:block;font-size:13px}.prow b{display:block;font-size:clamp(18px,2.8vw,32px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .nm{background:#d9d9d9}.yes{background:var(--green)}.no{background:#f00}
+.spin{width:54px;height:54px;margin:20px auto 4px;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+/* game */
+#game{background:#000;grid-template-rows:auto 1fr;padding:22px 3vw 3vh;gap:16px;color:var(--cream)}
+#game header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--cream);padding-bottom:16px;gap:8px;flex-wrap:wrap}
+#game header .logo{font-size:34px}
+.game-heading{display:flex;align-items:center;gap:14px;min-width:0}
+.game-mode{border:1px solid rgba(76,217,100,.7);border-radius:999px;padding:7px 12px;color:var(--green);font-size:12px;font-weight:900;letter-spacing:.04em;white-space:nowrap}
+.game-tools{display:flex;align-items:center;gap:10px}
+.forfeit,.reaction-toggle{border:1px solid var(--cream);border-radius:14px;padding:9px 14px;background:transparent;color:var(--cream);font:900 13px 'Poppins';cursor:pointer}
+.forfeit:hover{background:var(--red);border-color:var(--red)}
+.turn-clock{min-width:94px;padding:8px 12px;border:1px solid rgba(239,237,229,.35);border-radius:13px;font-size:12px;font-weight:900;text-align:center;font-variant-numeric:tabular-nums}
+.turn-clock.urgent{border-color:var(--red);color:#ff8585;animation:cp .7s ease-in-out infinite alternate}@keyframes cp{to{box-shadow:0 0 16px rgba(196,0,0,.5)}}
+.play{display:grid;grid-template-columns:minmax(200px,260px) 1fr minmax(200px,260px);gap:2vw;min-height:0}
+.pl{border-radius:28px;padding:18px 20px;height:max-content;color:#000;display:flex;justify-content:space-between;align-items:center;gap:8px;transition:box-shadow .25s,transform .25s}
+.pl.active{box-shadow:0 0 0 4px var(--green),0 0 40px rgba(76,217,100,.45);transform:scale(1.03)}
+.pl small{font-weight:900;font-size:16px;display:block}.pl strong{font-weight:900;font-size:24px;display:block;overflow-wrap:anywhere;line-height:1.1}
+.pl svg{width:46px;height:46px;flex:none}
+.wrap{border-radius:28px;overflow:auto;background:var(--cream);min-height:0;position:relative;-webkit-overflow-scrolling:touch}
+#grid{display:grid;width:max-content;position:relative}
+.c{width:var(--cell);height:var(--cell);border-right:1px solid rgba(0,0,0,.14);border-bottom:1px solid rgba(0,0,0,.14);display:grid;place-items:center;cursor:pointer}
+.c:hover{background:rgba(76,217,100,.18)}.c svg{width:72%;height:72%;animation:pop .22s ease}
+.c.last{background:rgba(0,0,0,.09)}.c.win{background:rgba(76,217,100,.45);animation:win-cell .75s ease-out both}.c.win svg{animation:win-mark .65s ease-out both}
+.win-overlay{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:5}
+.win-overlay line{stroke:#05b25a;stroke-width:7;stroke-linecap:round;filter:drop-shadow(0 1px 2px rgba(0,0,0,.65))}
+@keyframes win-cell{0%{background:transparent}45%{background:rgba(76,217,100,.75)}100%{background:rgba(76,217,100,.45)}}
+@keyframes win-mark{0%{opacity:.2;transform:scale(.55)}65%{opacity:1;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
+@keyframes win-line{to{stroke-dashoffset:0}}
+@keyframes result-fade{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.mbox.finish-result{animation:result-fade .45s ease-out both}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+.reaction-tray{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));z-index:25;width:min(560px,calc(100vw - 24px));padding:10px;border-radius:20px;background:rgba(239,237,229,.97);box-shadow:0 16px 46px rgba(0,0,0,.38);transform:translateX(-50%);color:#000}
+.rt-e{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
+.reaction-choice{aspect-ratio:1;border:0;border-radius:13px;background:transparent;font-size:28px;cursor:pointer}
+.reaction-choice:hover{background:rgba(76,217,100,.48)}
+.rt-c{display:flex;gap:8px;margin-top:8px}.rt-c input{flex:1;min-width:0;border:2px solid #000;border-radius:14px;padding:9px 12px;font:500 14px 'Poppins'}
+.rt-c button{border:0;border-radius:14px;background:#000;color:#fff;font:900 13px 'Poppins';padding:0 16px;cursor:pointer}
+.reaction-layer{position:fixed;inset:0;z-index:24;overflow:hidden;pointer-events:none}
+.reaction-pop{position:absolute;top:42%;font:clamp(54px,10vw,110px)/1 'Poppins';filter:drop-shadow(0 8px 14px rgba(0,0,0,.3));animation:rf 5s ease-out forwards}
+.reaction-pop.x{left:18%}.reaction-pop.o{right:18%}
+.reaction-pop.chat{font:600 clamp(15px,2vw,20px)/1.3 'Poppins';background:var(--cream);color:#000;padding:10px 16px;border-radius:20px;max-width:260px;top:30%;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
+.reaction-pop.chat.x{left:3%}.reaction-pop.chat.o{right:3%}
+@keyframes rf{0%{opacity:0;transform:translateY(24px) scale(.5)}12%{opacity:1;transform:translateY(0) scale(1.1)}22%{transform:scale(1)}82%{opacity:1}100%{opacity:0;transform:translateY(-90px) scale(.85)}}
+/* modal */
+.mod{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);z-index:40;padding:14px}
+.mod.on{display:grid}
+.mbox{background:var(--cream);border-radius:34px;padding:28px;width:min(520px,100%);max-height:90dvh;overflow:auto;text-align:center}
+.mbox h2{font-weight:900;font-size:clamp(22px,4vw,32px);margin-bottom:12px}.mbox p{margin:8px 0;font-size:15px;white-space:pre-line}
+.mbox .bk{width:100%;margin-top:10px}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#000;color:#fff;padding:12px 22px;border-radius:16px;font-weight:600;font-size:14px;z-index:60;display:none;max-width:90vw;text-align:center}
+@media(max-width:860px){
+ :root{--cell:38px}
+ .split{grid-template-columns:1fr}.photo{display:none}
+ .pane{justify-content:flex-start;padding:76px 14px 130px}
+ .card{border-radius:30px;padding:18px 16px}
+ .tiles{grid-template-columns:1fr}.tile{flex-direction:row;padding:14px}.tile .ic{width:64px;height:64px;font-size:40px}.tile hr{display:none}.tile>div{text-align:left}
+ .actions{left:12px;right:12px;bottom:12px}.actions .btn{flex:1;justify-content:center;height:54px;padding:0 12px;font-size:14px;gap:8px}
+ .back{top:22px;left:16px;font-size:16px}
+ .pay{border-radius:34px;padding:20px 14px}
+ #game{padding:14px 12px 12px;gap:10px}#game header .logo{font-size:26px}.game-heading{gap:8px}.game-mode{font-size:10px;padding:6px 9px}.game-tools{gap:6px;width:100%;justify-content:flex-end}
+ .play{grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;gap:10px}
+ .wrap{grid-column:1/3;grid-row:2;border-radius:20px}
+ .pl{padding:10px 12px;border-radius:20px}.pl strong{font-size:16px}.pl small{font-size:11px}.pl svg{width:30px;height:30px}
+ .turn-clock{min-width:70px;padding:7px 8px;font-size:10px}.forfeit,.reaction-toggle{padding:8px 9px;font-size:11px}
+ .rt-e{grid-template-columns:repeat(5,1fr)}
+ .reaction-pop.x{left:8%}.reaction-pop.o{right:8%}.top-r{top:12px;right:12px}.slots{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<section id="auth" class="screen split on">
+  <div class="photo"><span class="logo">MORP.IO<sup>HT</sup></span></div>
+  <div class="pane">
+    <h1 class="logo big">MORP.IO<sup>HT</sup></h1>
+    <p class="sub">Jwe mópyon ak zanmi oswa enkoni epi fè lajan.</p>
+    <div class="card glass" style="max-width:640px">
+      <a class="auth-wa-group" href="https://chat.whatsapp.com/BCmBJDZuSZrFoZ8zTqsZFa?s=cl&amp;p=a&amp;iam=2" target="_blank" rel="noopener noreferrer" aria-label="Antre nan gwoup WhatsApp Morpio.Ht" title="Gwoup WhatsApp Morpio.Ht"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 2.7A13.2 13.2 0 0 0 4.7 22.7L3 29l6.5-1.7A13.2 13.2 0 1 0 16 2.7Zm0 23.9a10.7 10.7 0 0 1-5.5-1.5l-.4-.2-3.8 1 1-3.7-.2-.4A10.7 10.7 0 1 1 16 26.6Z"/><path fill="currentColor" d="M22 18.5c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.6-1.8-1.8-2.1-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.2 3.2c.2.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.3.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg></a>
+      <button class="info-b" id="rulesBtn" type="button" aria-label="Reg jwèt la">!</button>
+      <h2 id="aTitle">KONEKSYON</h2>
+      <p class="hint" id="aHint">Pou w kapab jwe ak zanmi oswa ak etranje, ou sipoze konekte oswa kreye yon kont.</p>
+      <div id="fName" hidden><label for="aName">Non konplè</label><div class="inp"><input id="aName" maxlength="30" autocomplete="name"></div></div>
+      <label for="aMail">Mail</label><div class="inp"><input id="aMail" type="email" autocomplete="email"></div>
+      <label for="aPass">Modpas</label><div class="inp"><input id="aPass" type="password" autocomplete="current-password"></div>
+      <div id="fPhone" hidden><label for="aPhone">Nimewo WhatsApp</label><div class="inp"><input id="aPhone" type="tel" placeholder="+509 ..." autocomplete="tel"></div></div>
+      <div class="row2">
+        <div><button class="bk gl" id="gBtn" type="button" style="width:100%"><svg width="26" height="26" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.2 13.6 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17.1z"/><path fill="#FBBC05" d="M10.4 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.9-4.7l-7.8-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.9 2.3-8.5 2.3-6.4 0-11.8-4.1-13.6-9.8l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg>KONTINYE AK GOOGLE</button></div>
+        <div><button class="bk ok" id="aGo" type="button" style="width:100%">KONEKTE</button></div>
+      </div>
+      <p class="msg" id="aMsg" role="alert"></p>
+      <button class="lnk" id="aSwitch" type="button">Kreye yon kont</button>
+    </div>
+  </div>
+  <div class="actions"><button class="btn lvlBtn" type="button">Jwe ak computer <b>(gratis)</b><i>›</i></button></div>
+</section>
+
+<!-- HOME -->
+<section id="home" class="screen split">
+  <div class="photo"><span class="logo">MORP.IO<sup>HT</sup></span></div>
+  <div class="pane">
+    <div class="top-r"><a class="wa-group" href="https://chat.whatsapp.com/BCmBJDZuSZrFoZ8zTqsZFa?s=cl&amp;p=a&amp;iam=2" target="_blank" rel="noopener noreferrer" aria-label="Antre nan gwoup WhatsApp Morpio.Ht" title="Gwoup WhatsApp Morpio.Ht"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 2.7A13.2 13.2 0 0 0 4.7 22.7L3 29l6.5-1.7A13.2 13.2 0 1 0 16 2.7Zm0 23.9a10.7 10.7 0 0 1-5.5-1.5l-.4-.2-3.8 1 1-3.7-.2-.4A10.7 10.7 0 1 1 16 26.6Z"/><path fill="currentColor" d="M22 18.5c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.6-1.8-1.8-2.1-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.2 3.2c.2.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.3.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg></a><button id="msgBtn" type="button">MESAJ <span class="n" id="msgN" hidden>0</span></button><a id="admLink" href="admin.html" hidden><button type="button">ADMIN</button></a><button id="outBtn" type="button">DEKONEKTE</button></div>
+    <h1 class="logo big">MORP.IO<sup>HT</sup></h1>
+    <p class="sub">Jwe mópyon ak zanmi oswa enkoni epi fè lajan.</p>
+    <div class="card glass">
+      <div class="hhead">
+        <button class="me" id="meBox" type="button"><span class="av" id="meAv"></span><span style="min-width:0"><h3>Byenvini, <span id="meName"></span></h3><small id="meStat"></small></span></button>
+        <div id="champ" style="display:contents"></div>
+      </div>
+      <div class="tiles">
+        <button class="tile" id="tTourn" type="button"><span class="dot" id="tDot" hidden></span><span class="ic" data-n="3" data-e="🏆"></span><div><h4>TOUNWA</h4></div><hr><p id="tCount">...</p></button>
+        <button class="tile" id="tRand" type="button"><span class="ic" data-n="4" data-e="👥"></span><div><h4>JWE AK ETRANJE</h4></div><hr><p id="rCount">...</p></button>
+        <button class="tile" id="tFr" type="button"><span class="ic" data-n="5" data-e="🤝"></span><div><h4>JWE AK ZANMI</h4></div><hr><p>ANTRE KOD PARENAJ</p></button>
+      </div>
+      <div class="hfoot"><a href="statusJoueur.html" style="display:contents"><button class="bk" type="button">STATISTIK SOU MATCH YO</button></a><p><b>NB:</b> Ou kapab fè lajan nan patisipe nan tounwa yo epi lè w chwazi jwe ak zanmi w pou lajan.</p></div>
+    </div>
+  </div>
+  <div class="actions"><button class="btn lvlBtn" type="button">Jwe ak computer <b>(gratis)</b><i>›</i></button></div>
+</section>
+
+<!-- PROFILE -->
+<section id="profile" class="screen split">
+  <div class="photo"><span class="logo">MORP.IO<sup>HT</sup></span></div>
+  <div class="pane">
+    <button class="back bk0" type="button" data-go="home">← BACK</button>
+    <div class="card glass" style="margin-top:20px">
+      <h2>KONT MWEN</h2>
+      <div style="display:flex;justify-content:center;margin:12px 0"><span class="av" id="pAv" style="width:86px;height:86px"></span></div>
+      <label for="pName" id="pNameL">Non itilizatè</label><div class="inp"><input id="pName" maxlength="30"></div>
+      <label>Mail</label><div class="inp" style="opacity:.6"><input id="pMail" disabled></div>
+      <label for="pPhone">Telefòn WhatsApp</label><div class="inp"><input id="pPhone" type="tel" placeholder="+509 ..."></div>
+      <button class="bk dark" id="pSave" type="button" style="width:100%;margin-top:14px">ANREJISTRE</button>
+      <p class="msg" id="pMsg"></p>
+      <div class="stats3"><div><strong id="pM">0</strong>MATCH</div><div><strong id="pW">0</strong>VIKTWA</div><div><strong id="pL">0</strong>DEFÈT</div></div>
+      <h3 style="margin:18px 0 0;font-weight:900">Match mwen jwe yo</h3>
+      <div class="list" id="pHist"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOURNAMENTS -->
+<section id="tourn" class="screen split">
+  <div class="photo"><span class="logo">MORP.IO<sup>HT</sup></span></div>
+  <div class="pane">
+    <button class="back" type="button" data-go="home">← BACK</button>
+    <div class="card glass" style="margin-top:20px"><h2>TOUNWA</h2><p class="hint">Peze sou “Patisipe” pou w antre nan yon tounwa. Moun ki gen jaune yo poko peye, sa ki en vert yo peye deja.</p><div class="list" id="tList"></div></div>
+  </div>
+</section>
+
+<!-- FRIENDS -->
+<section id="friends" class="screen split">
+  <div class="photo"><span class="logo">MORP.IO<sup>HT</sup></span></div>
+  <div class="pane">
+    <button class="back" type="button" data-go="home">← BACK</button>
+    <h1 class="logo big">MORP.IO<sup>HT</sup></h1>
+    <div class="card glass" style="max-width:620px">
+      <h2>JWE AK ZANMI</h2><p class="hint">Chwazi kijan w vle jwe, epi antre menm kòd parenaj la ak zanmi w lan.</p>
+      <div class="row2" style="margin-top:0"><button class="bk lite" id="fFree" type="button">GRATIS</button><button class="bk lite" id="fPaid" type="button">POU LAJAN</button></div>
+      <div id="fAmt" hidden><label for="fAmount">Kantite lajan</label><div class="inp"><input id="fAmount" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="7" autocomplete="off" placeholder="Minimòm 25"><span class="amount-unit">Goud</span></div></div>
+      <label for="fCode">Kòd parenaj</label><div class="inp up"><input id="fCode" maxlength="12" placeholder="Egzanp: AG2026" autocomplete="off"></div>
+      <p style="font-size:13px;margin-top:12px"><b>NB:</b> <span id="fNb">Lè ou menm ak zanmi w lan antre menm kod la, nou konekte ansanm epi nou jwe.</span></p>
+      <p class="msg" id="fMsg"></p>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" id="fGo" type="button">Kontinye <i>›</i></button></div>
+</section>
+
+<!-- WAIT / PAYMENT -->
+<section id="wait" class="screen split">
+  <div class="photo"><span class="logo">MORP.IO<sup>HT</sup></span></div>
+  <div class="pane">
+    <button class="back" id="wBack" type="button">← BACK</button>
+    <h1 class="logo big">MORP.IO<sup>HT</sup></h1>
+    <p class="sub" id="wSub"></p>
+    <div class="pay">
+      <h3 id="wTitle">AP TANN KONEKSYON</h3>
+      <div id="wPay" hidden><p>Nan mwens ke 3 minit ou sipoze voye kob w ap jwe an sou nimewo Natcash platfòm nan:</p><div class="num" id="wNum"></div><p id="wAmt" style="opacity:.75"></p></div>
+      <div class="prow"><div class="nm"><small>ADVÈSÈ W</small><b id="oppN">AP TANN...</b></div><div class="nm yes" id="oppS" hidden><small>PÈMAN</small><b></b></div></div>
+      <div class="prow"><div class="nm"><small>OU MENM</small><b id="meN"></b></div><div class="nm" id="meS" hidden><small>PÈMAN</small><b></b></div></div>
+      <svg class="spin" id="spin" viewBox="0 0 50 50" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"><circle cx="25" cy="25" r="19" stroke-dasharray="14 8"/></svg>
+      <div class="msg" id="pMsg2" style="color:#ffb4b4"></div>
+    </div>
+  </div>
+</section>
+
+<!-- GAME -->
+<section id="game" class="screen">
+  <header>
+    <div class="game-heading"><span class="logo">MORP.IO<sup>HT</sup></span><span class="game-mode" id="game-mode" aria-live="polite"></span></div>
+    <div class="game-tools">
+      <span class="turn-clock" id="turn-clock" aria-live="polite" hidden></span>
+      <button class="reaction-toggle" id="reaction-toggle" type="button" hidden>REYAKSYON / MESAJ</button>
+      <button class="forfeit" id="forfeit" type="button" hidden>DEKLARE FORFEIT</button>
+      <button class="forfeit" id="leavePc" type="button" hidden>KITE</button>
+    </div>
+  </header>
+  <div class="play">
+    <div class="pl glass" id="plX"><div><small>KANTITE : <span id="cX">0</span></small><strong id="nX"></strong></div><svg viewBox="0 0 40 40"><path d="M6 6L34 34M34 6L6 34" stroke="#c40000" stroke-width="4" stroke-linecap="round"/></svg></div>
+    <div class="wrap glass" id="wrap"><div id="grid"></div></div>
+    <div class="pl glass" id="plO"><div><small>KANTITE : <span id="cO">0</span></small><strong id="nO"></strong></div><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="13" fill="none" stroke="#4cd964" stroke-width="4"/></svg></div>
+  </div>
+</section>
+
+<div class="reaction-layer" id="reaction-layer" aria-live="polite"></div>
+<div class="reaction-tray" id="reaction-tray" hidden><div class="rt-e" id="rt-e"></div><form class="rt-c" id="chatForm"><input id="chatIn" maxlength="60" placeholder="Ekri yon ti mesaj..." autocomplete="off"><button>VOYE</button></form></div>
+<div class="mod" id="mod"><div class="mbox" id="mbox"></div></div>
+<div id="toast"></div>
+
+<script>
+const SUPABASE_URL="https://hpviwykrlmqwjfnybrtk.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_63pfFdujvsSGlZcVBJWv3Q_EFXmd2w7";
+const BEST_MSG="Bonswa, mwen se yon joeur Morp.io HT, mwen ta renmen defye w etandone se ou menm ki meilleur joueur an! Sa w panse?";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const ICON={X:'<svg viewBox="0 0 40 40"><path d="M6 6L34 34M34 6L6 34" stroke="#c40000" stroke-width="5" stroke-linecap="round"/></svg>',O:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="13" fill="none" stroke="#4cd964" stroke-width="5"/></svg>'};
+let ME=null,TOKEN=null,booted=false,homeTimer=null,BEST=null,messageRefresh=null,activeMessageTab=null,playerChatAfterId=0,playerChatLoading=false,tournamentPoll=null;
+const S={mode:null,role:'X',game:null,stones:new Map(),turn:'X',over:false,chans:[],gameChannel:null,poll:null,searchTimeout:null,turnClock:null,started:false,movePending:false,timeoutPending:false,timeoutRetryAt:0,leaveSent:false,count:{X:0,O:0},level:null,humanMark:'X',pcMark:'O',seek:null,lastChat:0};
+
+function show(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('on',e.id===id));if(id!=='home')clearInterval(homeTimer);if(id!=='tourn')clearInterval(tournamentPoll)}
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',4200)}
+function modal(html){clearInterval(messageRefresh);messageRefresh=null;activeMessageTab=null;$('#mbox').classList.remove('finish-result');$('#mbox').innerHTML=html;$('#mod').classList.add('on')}
+function closeMod(){clearInterval(messageRefresh);messageRefresh=null;activeMessageTab=null;$('#mod').classList.remove('on')}
+$('#mod').addEventListener('click',e=>{if(e.target.id==='mod')closeMod()});
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){if(g.dataset.go==='home')goHome();else show(g.dataset.go)}});
+function icons(root=document){root.querySelectorAll('.ic[data-n]').forEach(e=>{e.innerHTML=`<b>${e.dataset.e}</b><img src="assets/Image${e.dataset.n}.jpg" alt="" onerror="this.remove()">`})}
+icons();
+function avatar(el,url){
+  const fallback='assets/Image1.jpg';
+  el.innerHTML=`<b style="font-size:30px">👤</b><img src="${esc(url||fallback)}" alt="" referrerpolicy="no-referrer">`;
+  const img=el.querySelector('img');
+  img.onerror=()=>{if(img.getAttribute('src')!==fallback)img.src=fallback;else img.remove()};
+}
+function cleanup(){S.chans.forEach(c=>sb.removeChannel(c));S.chans=[];S.gameChannel=null;clearInterval(S.poll);clearTimeout(S.searchTimeout);clearInterval(S.turnClock);$('#reaction-tray').hidden=true;$('#turn-clock').hidden=true;S.started=false;S.game=null;S.seek=null;S.leaveSent=false}
+const errMsg=e=>e?.message||'Erè. Tanpri eseye ankò.';
+
+/* ---------- AUTH ---------- */
+let signup=false;
+function setAuth(s){signup=s;$('#aTitle').textContent=s?'KREYE YON KONT':'KONEKSYON';$('#aHint').textContent=s?'Antre non konplè w, mail, modpas ak nimewo WhatsApp ou.':'Pou w kapab jwe ak zanmi oswa ak etranje, ou sipoze konekte oswa kreye yon kont.';$('#fName').hidden=$('#fPhone').hidden=!s;$('#aGo').textContent=s?'KREYE':'KONEKTE';$('#aSwitch').textContent=s?'Mwen gen yon kont deja':'Kreye yon kont';$('#aMsg').textContent='';$('#aPass').autocomplete=s?'new-password':'current-password'}
+$('#aSwitch').onclick=()=>setAuth(!signup);
+$('#gBtn').onclick=async()=>{const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)$('#aMsg').textContent=errMsg(error)};
+$('#aGo').onclick=async()=>{
+  const m=$('#aMsg'),email=$('#aMail').value.trim(),pass=$('#aPass').value;m.textContent='';m.style.color='#9b0000';
+  if(!email||!pass)return m.textContent='Antre mail ak modpas ou.';
+  const b=$('#aGo');b.disabled=true;
+  try{
+    if(signup){
+      const name=$('#aName').value.trim().replace(/\s+/g,' '),phone=$('#aPhone').value.trim();
+      if(name.length<2)throw{message:'Antre non konplè w.'};
+      if(pass.length<6)throw{message:'Modpas la dwe gen omwen 6 karaktè.'};
+      if(!/^\+?[0-9 ]{8,16}$/.test(phone))throw{message:'Nimewo WhatsApp la pa valab (egzanp: +509 55 67 9002).'};
+      const{data,error}=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name,whatsapp:phone}}});
+      if(error)throw error;
+      if(!data.session){m.style.color='#05803a';m.textContent='Kont lan kreye. Verifye mail ou pou konfime l, answit konekte.';setAuth(false)}
+    }else{
+      const{error}=await sb.auth.signInWithPassword({email,password:pass});
+      if(error)throw{message:/Invalid login/i.test(error.message)?'Mail oswa modpas la pa bon.':/not confirmed/i.test(error.message)?'Konfime mail ou anvan w konekte.':error.message};
+    }
+  }catch(e){m.textContent=errMsg(e)}
+  b.disabled=false;
+};
+$('#rulesBtn').onclick=async()=>{
+  const{data}=await sb.from('app_settings').select('value').eq('key','rules').maybeSingle();
+  modal(`<h2>Reg jwèt la</h2><p style="text-align:left">${esc(data?.value||'Pa gen reg ki anrejistre pou kounye a.')}</p><button class="bk dark" onclick="closeMod()">OK</button>`);
+};
+$('#outBtn').onclick=async()=>{cleanup();try{await removeCurrentPushSubscription()}catch(e){toast('Nou pa rive retire abònman notifikasyon an: '+errMsg(e))}await sb.auth.signOut()};
+sb.auth.onAuthStateChange((ev,ses)=>{
+  TOKEN=ses?.access_token||null;
+  if(ev==='SIGNED_OUT'){ME=null;booted=false;if(S.mode!=='pc')show('auth')}
+  else if(ses&&(ev==='SIGNED_IN'||ev==='INITIAL_SESSION')&&!booted){booted=true;setTimeout(boot,0)}
+});
+
+/* ---------- HOME ---------- */
+async function loadMe(){
+  const{data,error}=await sb.rpc('my_overview');
+  if(error){toast(errMsg(error));return false}
+  const{data:{session}}=await sb.auth.getSession();
+  const googleAvatar=session?.user?.user_metadata?.avatar_url||session?.user?.user_metadata?.picture;
+  ME={...data.profile,avatar_url:googleAvatar||data.profile.avatar_url,matches:data.matches,wins:data.wins,losses:data.matches-data.wins,history:data.history,messages:data.messages};return true;
+}
+async function boot(){
+  if(!await loadMe()){booted=false;return}
+  const{data:act}=await sb.rpc('my_active_game');
+  if(act?.game){S.mode='online';S.seek=null;S.game=act.game;S.role=act.role;subscribeGame(act.game.id);onGame(act.game);openNotificationConversation();return}
+  await goHome();
+  if(!ME.phone&&!sessionStorage.phoneAsk){sessionStorage.phoneAsk=1;toast('Ajoute nimewo WhatsApp ou nan kont ou.');openProfile()}
+  openNotificationConversation();
+}
+function openNotificationConversation(){
+  const destination=new URLSearchParams(location.search).get('openMessages');
+  if(destination!=='admin'&&destination!=='public')return;
+  history.replaceState(null,'',location.pathname+location.hash);
+  openUserMessages();
+  if(destination==='public')setUserMessageTab('players');
+}
+async function goHome(){
+  cleanup();S.mode=null;if(!ME)return show('auth');
+  await loadMe();renderHome();show('home');loadCounts();
+  clearInterval(homeTimer);homeTimer=setInterval(loadCounts,8000);
+}
+function renderHome(){
+  avatar($('#meAv'),ME.avatar_url);
+  $('#meName').textContent=(ME.username||'').split(' ')[0];
+  $('#meStat').textContent=`${ME.matches} MATCHS, ${ME.wins} VIKTWA , ${ME.losses} DEFET`;
+  $('#admLink').hidden=!ME.is_admin;
+  const n=ME.messages.length;$('#msgBtn').hidden=false;$('#msgN').hidden=!n;$('#msgN').textContent=n;
+  renderChamp();
+}
+async function renderChamp(){
+  const box=$('#champ');
+  const{data}=await sb.rpc('best_player');BEST=data;
+  if(data?.is_me)box.innerHTML='<div class="champ static">🏆 Felisitasyon, ou se pi gwo jwè sou platfom nan!</div>';
+  else box.innerHTML='<button class="champ" id="chBtn" type="button"><span class="ic" data-n="2" data-e="🥇"></span>Defye meyè jwè platfòm nan!</button>';
+  icons(box);$('#chBtn')&&($('#chBtn').onclick=challenge);
+}
+function challenge(){
+  const b=BEST||{};
+  if(!b.exists)return modal(`<h2>Meyè jwè</h2><p>Poko gen meyè jwè sou platfòm nan.</p><button class="bk dark" onclick="closeMod()">OK</button>`);
+  if(b.my_wins<20||!b.phone&&!b.name)return modal(`<h2>Defi</h2><p>Ou sipoze genyen omwen 20 viktwa pou w ka jwe ak meye jwe an.</p><button class="bk dark" onclick="closeMod()">OK</button>`);
+  const digits=(b.phone||'').replace(/\D/g,'');
+  modal(`<h2>Meyè jwè a</h2><p><b>Non:</b> ${esc(b.name)}</p><p><b>Telefòn:</b> ${esc(b.phone||'Pa disponib')}</p>`+(digits?`<a href="https://wa.me/${digits}?text=${encodeURIComponent(BEST_MSG)}" target="_blank" rel="noopener"><button class="bk ok" type="button" style="width:100%;margin-top:10px">WHATSAPP</button></a>`:'<p>Meyè jwè a poko mete nimewo WhatsApp li.</p>')+`<button class="bk dark" onclick="closeMod()">FÈMEN</button>`);
+}
+async function loadCounts(){
+  const[{data:t},{data:r}]=await Promise.all([sb.rpc('list_tournaments'),sb.rpc('count_seekers')]);
+  const open=(t||[]).filter(x=>x.status==='open').length;
+  $('#tCount').textContent=`${open} TOUNWA DISPONIB`;$('#tDot').hidden=!open;
+  $('#rCount').textContent=`${r??0} ETRANJE DISPONIB`;
+}
+async function loadUserThread(){
+  const{data,error}=await sb.rpc('my_message_thread');
+  if(error){toast(errMsg(error));if(activeMessageTab==='admin'){clearInterval(messageRefresh);messageRefresh=null}return false}
+  const log=$('#userChatLog');if(!log)return false;
+  const nearBottom=log.scrollHeight-log.scrollTop-log.clientHeight<60;
+  log.innerHTML=(data||[]).map(m=>`<div class="chat-message ${m.from_admin?'admin':'player'}"><div>${esc(m.body)}</div><small>${new Date(m.created_at).toLocaleString('ht-HT',{dateStyle:'short',timeStyle:'short'})}</small></div>`).join('')||'<div class="chat-empty">Ou kapab ekri administratè a isit la si w bezwen èd.</div>';
+  if(nearBottom)log.scrollTop=log.scrollHeight;
+  await loadMe();
+  const n=ME?.messages?.length||0;$('#msgN').hidden=!n;$('#msgN').textContent=n;
+  return true;
+}
+async function loadPlayerChat(initial=false){
+  if(playerChatLoading)return false;
+  playerChatLoading=true;
+  try{
+    const{data,error}=await sb.rpc('get_player_chat_messages',{p_after_id:initial?0:playerChatAfterId});
+    if(error){toast(errMsg(error));if(activeMessageTab==='players'){clearInterval(messageRefresh);messageRefresh=null}return false}
+    const log=$('#playerChatLog');if(!log)return false;
+    const nearBottom=log.scrollHeight-log.scrollTop-log.clientHeight<60;
+    const messages=data||[];
+    if(initial)log.innerHTML='';
+    if(!messages.length&&initial)log.innerHTML='<div class="chat-empty">Pa gen mesaj nan sal la. Se pou tout jwè konekte yo.</div>';
+    else if(messages.length){
+      log.querySelector('.chat-empty')?.remove();
+      log.insertAdjacentHTML('beforeend',messages.map(m=>`<div class="chat-message public ${m.user_id===ME.id?'mine':''}"><strong>${m.user_id===ME.id?'Ou':esc(m.username||'Jwè')}</strong><div>${esc(m.body)}</div><small>${new Date(m.created_at).toLocaleString('ht-HT',{dateStyle:'short',timeStyle:'short'})}</small></div>`).join(''));
+      playerChatAfterId=Math.max(playerChatAfterId,...messages.map(m=>Number(m.id)));
+    }
+    if(nearBottom)log.scrollTop=log.scrollHeight;
+    return true;
+  }finally{playerChatLoading=false}
+}
+function setUserMessageTab(tab){
+  clearInterval(messageRefresh);messageRefresh=null;
+  activeMessageTab=tab;
+  const publicChat=tab==='players';
+  $('#userDmPanel').hidden=publicChat;$('#playerChatPanel').hidden=!publicChat;
+  $('#userDmTab').classList.toggle('active',!publicChat);$('#playerChatTab').classList.toggle('active',publicChat);
+  $('#userDmTab').setAttribute('aria-selected',String(!publicChat));$('#playerChatTab').setAttribute('aria-selected',String(publicChat));
+  if(publicChat){
+    playerChatAfterId=0;$('#playerChatLog').innerHTML='';
+    loadPlayerChat(true);
+    messageRefresh=setInterval(()=>loadPlayerChat(),3500);
+  }else{
+    loadUserThread();
+    messageRefresh=setInterval(loadUserThread,5000);
+  }
+}
+async function sendPlayerChatMessage(){
+  const input=$('#playerChatInput'),button=$('#playerChatSend'),body=input.value.trim();
+  if(!body)return toast('Ekri yon mesaj anvan ou voye l.');
+  button.disabled=true;
+  try{
+    const{error}=await sb.rpc('send_player_chat_message',{p_body:body});
+    if(error)throw error;
+    input.value='';await loadPlayerChat();
+  }catch(e){toast(errMsg(e))}
+  finally{button.disabled=false}
+}
+function pushAvailable(){
+  return isSecureContext&&'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+}
+function decodeVapidKey(value){
+  const padded=(value+'='.repeat((4-value.length%4)%4)).replace(/-/g,'+').replace(/_/g,'/');
+  const raw=atob(padded),bytes=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+  return bytes;
+}
+async function refreshPushControls(){
+  const button=$('#pushToggle'),status=$('#pushStatus');if(!button||!status)return;
+  button.dataset.enabled='false';button.disabled=false;
+  if(!pushAvailable()){
+    button.disabled=true;status.textContent='Notifikasyon sou aparèy mande HTTPS ak yon navigatè ki sipòte Web Push.';return;
+  }
+  if(Notification.permission==='denied'){
+    button.disabled=true;status.textContent='Navigatè a bloke notifikasyon yo. Chanje pèmisyon sit la nan paramèt navigatè a.';return;
+  }
+  try{
+    const registration=await navigator.serviceWorker.getRegistration();
+    const subscription=await registration?.pushManager.getSubscription();
+    if(subscription){
+      button.dataset.enabled='true';button.textContent='DEZAKTIVE NOTIFIKASYON SOU APARÈY SA A';
+      status.textContent='Notifikasyon ak son default aparèy la aktive.';
+      const{error}=await sb.rpc('save_push_subscription',{p_subscription:subscription.toJSON()});
+      if(error)status.textContent='Abònman an sou aparèy la, men li pa t ka senkronize ak kont lan: '+errMsg(error);
+    }else{
+      button.textContent='AKTIVE NOTIFIKASYON';
+      status.textContent=Notification.permission==='granted'
+        ?'Pèmisyon an la; peze bouton an pou fini aktive mesaj push yo.'
+        :'Pèmèt notifikasyon yo pou resevwa mesaj menm lè navigatè a fèmen.';
+    }
+  }catch(e){
+    button.disabled=true;status.textContent='Nou pa rive verifye abònman notifikasyon an: '+errMsg(e);
+  }
+}
+async function removeCurrentPushSubscription(){
+  if(!('serviceWorker' in navigator))return;
+  const registration=await navigator.serviceWorker.getRegistration();
+  const subscription=await registration?.pushManager.getSubscription();
+  if(!subscription)return;
+  const{error}=await sb.rpc('remove_push_subscription',{p_endpoint:subscription.endpoint});
+  if(error)throw error;
+  await subscription.unsubscribe();
+}
+async function togglePushNotifications(){
+  const button=$('#pushToggle');if(!button)return;
+  button.disabled=true;
+  try{
+    if(button.dataset.enabled==='true'){
+      await removeCurrentPushSubscription();
+      toast('Notifikasyon yo dezaktive sou aparèy sa a.');
+      return;
+    }
+    if(!pushAvailable())throw new Error('Navigatè sa a mande HTTPS epi li dwe sipòte Web Push.');
+    const{data:publicKey,error:keyError}=await sb.rpc('get_push_vapid_public_key');
+    if(keyError)throw keyError;
+    if(typeof publicKey!=='string'||!publicKey)throw new Error('Administratè a poko mete kle piblik VAPID la nan Paramèt sit la.');
+    const permission=Notification.permission==='granted'?'granted':await Notification.requestPermission();
+    if(permission!=='granted')throw new Error('Pèmèt notifikasyon yo nan navigatè a pou aktive yo.');
+    const registration=await navigator.serviceWorker.register(new URL('sw.js',location.href));
+    await navigator.serviceWorker.ready;
+    let subscription=await registration.pushManager.getSubscription();
+    if(!subscription)subscription=await registration.pushManager.subscribe({
+      userVisibleOnly:true,
+      applicationServerKey:decodeVapidKey(publicKey)
+    });
+    const{error}=await sb.rpc('save_push_subscription',{p_subscription:subscription.toJSON()});
+    if(error){await subscription.unsubscribe();throw error}
+    toast('Notifikasyon yo aktive sou aparèy sa a.');
+  }catch(e){toast(errMsg(e))}
+  finally{await refreshPushControls()}
+}
+function openUserMessages(){
+  modal(`<h2>Mesaj yo</h2><div class="push-controls"><p id="pushStatus">Aktive notifikasyon sou aparèy sa a pou resevwa mesaj menm lè sit la fèmen.</p><button class="bk lite" id="pushToggle" type="button">AKTIVE NOTIFIKASYON</button></div><div class="message-tabs" role="tablist"><button class="message-tab active" id="userDmTab" type="button" role="tab" aria-selected="true">ADMINISTRATÈ</button><button class="message-tab" id="playerChatTab" type="button" role="tab" aria-selected="false">TOUT JWÈ YO</button></div>
+    <section id="userDmPanel"><div class="chat-log" id="userChatLog" aria-live="polite"></div><textarea class="chat-compose" id="userChatInput" maxlength="500" placeholder="Ekri mesaj ou pou administratè a (maksimòm 500 karaktè)..."></textarea><button class="bk ok" id="userChatSend" type="button">VOYE BAY ADMINISTRATÈ A</button></section>
+    <section id="playerChatPanel" hidden><p>Mesaj sa yo vizib pou tout jwè ki konekte yo. Pa pataje enfòmasyon prive.</p><div class="chat-log" id="playerChatLog" aria-live="polite"></div><textarea class="chat-compose" id="playerChatInput" maxlength="500" placeholder="Ekri yon mesaj pou tout jwè yo..."></textarea><button class="bk ok" id="playerChatSend" type="button">VOYE NAN SAL LA</button></section>
+    <button class="bk dark" type="button" onclick="closeMod()">FÈMEN</button>`);
+  $('#userDmTab').onclick=()=>setUserMessageTab('admin');
+  $('#playerChatTab').onclick=()=>setUserMessageTab('players');
+  $('#userChatSend').onclick=async()=>{
+    const body=$('#userChatInput').value.trim(),button=$('#userChatSend');
+    if(!body)return toast('Ekri yon mesaj anvan ou voye l.');
+    button.disabled=true;
+    const{error}=await sb.rpc('send_user_message',{p_body:body});
+    if(error)toast(errMsg(error));
+    else{const input=$('#userChatInput');if(input){input.value='';await loadUserThread()}}
+    button.disabled=false;
+  };
+  $('#playerChatSend').onclick=sendPlayerChatMessage;
+  $('#playerChatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendPlayerChatMessage()}});
+  $('#pushToggle').onclick=togglePushNotifications;
+  refreshPushControls();
+  setUserMessageTab('admin');
+}
+$('#msgBtn').onclick=openUserMessages;
+
+/* ---------- PROFILE ---------- */
+function openProfile(){
+  avatar($('#pAv'),ME.avatar_url);
+  $('#pNameL').textContent=ME.provider==='google'?'Non kont Google (ou ka modifye l)':'Non itilizatè';
+  $('#pName').value=ME.username;$('#pMail').value=ME.email||'';$('#pPhone').value=ME.phone||'';$('#pMsg').textContent='';
+  $('#pM').textContent=ME.matches;$('#pW').textContent=ME.wins;$('#pL').textContent=ME.losses;
+  const R={forfeit:' (forfè)',timeout:' (tan fini)',win:''};
+  $('#pHist').innerHTML=ME.history.length?ME.history.map(h=>`<div class="item"><span><b>Ou VS ${esc(h.opponent)}</b><small>${new Date(h.finished_at).toLocaleString('ht-HT',{dateStyle:'medium',timeStyle:'short'})} · ${h.moves} kou${R[h.reason]||''}</small></span><span class="pill ${h.won?'w':'l'}">${h.won?'VIKTWA':'DEFÈT'}</span></div>`).join(''):'<div class="item">Ou poko jwe okenn match ak jwè reyèl.</div>';
+  show('profile');
+}
+$('#meBox').onclick=openProfile;
+$('#pSave').onclick=async()=>{
+  const m=$('#pMsg');m.style.color='#9b0000';
+  const{error}=await sb.rpc('update_my_profile',{p_username:$('#pName').value,p_phone:$('#pPhone').value});
+  if(error)return m.textContent=errMsg(error);
+  await loadMe();m.style.color='#05803a';m.textContent='Enfòmasyon yo anrejistre.';
+};
+
+/* ---------- TOURNAMENTS ---------- */
+$('#tTourn').onclick=async()=>{
+  show('tourn');$('#tList').innerHTML='<div class="item">Ap chaje...</div>';await renderTourn();
+  clearInterval(tournamentPoll);tournamentPoll=setInterval(()=>{if($('#tourn').classList.contains('on'))renderTourn()},5000);
+};
+async function renderTourn(){
+  const{data,error}=await sb.rpc('list_tournaments');
+  if(error)return $('#tList').innerHTML=`<div class="item">${esc(errMsg(error))}</div>`;
+  const{data:matches}=await sb.rpc('list_tournament_matches');
+  const liveTournamentMatch=(matches||[]).find(m=>m.status==='playing'&&m.game_id&&(m.p1_id===ME?.id||m.p2_id===ME?.id)&&S.game?.id!==m.game_id);
+  if(liveTournamentMatch){
+    const{data:game,error:gameError}=await sb.from('games').select('*').eq('id',liveTournamentMatch.game_id).maybeSingle();
+    if(!gameError&&game&&S.game?.id!==game.id){
+      S.mode='online';S.seek=null;S.game=game;S.role=game.p1_id===ME.id?'X':'O';
+      subscribeGame(game.id);onGame(game);return;
+    }
+  }
+  const open=data.filter(t=>t.status==='open'),fin=data.filter(t=>t.status!=='open');
+  if(!data.length)return $('#tList').innerHTML='<div class="item">Pa gen tounwa disponib kounye a.</div>';
+  const nameOf=(t,id)=>t.participants.find(p=>p.uid===id)?.name;
+  $('#tList').innerHTML=[...open,...fin].map(t=>{
+    const paid=t.participants.filter(p=>p.status==='paid'),slots=[];
+    for(let i=0;i<t.max_players;i++){const p=t.participants[i];slots.push(p?`<div class="slot">${esc(p.name)}<i class="${p.status==='paid'?'':'p'}"></i></div>`:'<div class="slot off">ENDISPONIB</div>')}
+    const prizes=[['Premye',t.prize1,t.winner1],['Dezyem',t.prize2,t.winner2],['Twazyem',t.prize3,t.winner3]].filter(x=>x[1]||x[2]);
+    const full=t.participants.length>=t.max_players;
+    const act=t.status!=='open'?'<b>TOUNWA SA A FINI</b>':t.my_status==='paid'?'<b style="color:#05803a">OU ANTRE NAN TOUNWA A ✓</b>':t.my_status==='pending'?`<b>AP TANN VALIDASYON ADMIN</b> <button class="bk lite" data-leave="${t.id}" style="min-height:40px">ANILE</button>`:full?'<b>TOUNWA A PLEN</b>':`<button class="bk dark" data-join="${t.id}" style="width:100%">PATISIPE</button>`;
+    const bracket=(matches||[]).filter(m=>m.tournament_id===t.id).map(m=>{
+      const amI=m.p1_id===ME?.id||m.p2_id===ME?.id;
+      const ready=m.p1_id===ME?.id?m.p1_ready:m.p2_id===ME?.id?m.p2_ready:false;
+      const play=m.status==='playing'&&m.game_id;
+      const action=amI&&m.status==='waiting'?`<button class="bk ${ready?'lite':'dark'}" data-ready="${m.id}" ${ready?'disabled':''}>${ready?'OU PRÈ':'JWE'}</button>`:play&&amI?`<button class="bk dark" data-play-tournament="${m.game_id}">JWE MATCH LA</button>`:'';
+      return `<div class="slot" style="width:100%;align-items:flex-start;flex-direction:column"><b>${esc(m.round_name)} · Match ${m.position}</b><span>${esc(m.p1_name||'VS')} VS ${esc(m.p2_name||'VS')}</span>${action}</div>`;
+    }).join('');
+    return `<div class="tcard"><h3>TOUNWA <span>${esc(t.name)}</span></h3>
+     <div><b>AP KOMANSE:</b> ${esc(t.start_text||'Lè tout patisipan yo peye')}</div><div><b>MAKSIMUM PATISIPAN:</b> ${t.max_players}</div>
+     <div><b>PATISIPAN KI PEYE:</b> ${paid.length}</div><div><b>PRI PATISIPASYON:</b> ${t.fee?t.fee+' Goud':'Gratis'}</div>
+     ${prizes.map(p=>`<div><b>PRIM ${p[0].toUpperCase()}:</b> ${esc(p[1]||'')}${p[2]?' → <b style="color:#05803a">'+esc(nameOf(t,p[2])||'')+'</b>':''}</div>`).join('')}
+     ${t.note?`<div><b>NB:</b> ${esc(t.note)}</div>`:''}
+     <div class="slots">${slots.join('')}</div>${bracket?`<div class="slots">${bracket}</div>`:''}<div>${act}</div></div>`}).join('');
+  document.querySelectorAll('[data-join]').forEach(b=>b.onclick=()=>joinFlow(data.find(t=>t.id===b.dataset.join)));
+  document.querySelectorAll('[data-leave]').forEach(b=>b.onclick=async()=>{const{error}=await sb.rpc('leave_tournament',{p_tournament:b.dataset.leave});if(error)toast(errMsg(error));renderTourn()});
+  document.querySelectorAll('[data-ready]').forEach(b=>b.onclick=async()=>{
+    b.disabled=true;
+    const{data,error}=await sb.rpc('ready_tournament_match',{p_match:b.dataset.ready});
+    if(error){toast(errMsg(error));b.disabled=false;return}
+    await renderTourn();
+    const tournament=(data||[]).find(m=>m.id===b.dataset.ready)?.tournament_id;
+    const match=(data||[]).find(m=>m.id===b.dataset.ready);
+    if(match?.status==='playing'&&match.game_id){
+      const{data:game,error:gameError}=await sb.from('games').select('*').eq('id',match.game_id).maybeSingle();
+      if(!gameError&&game){
+        S.mode='online';S.seek=null;S.game=game;S.role=game.p1_id===ME.id?'X':'O';
+        subscribeGame(game.id);onGame(game);
+      }
+    }
+  });
+  document.querySelectorAll('[data-play-tournament]').forEach(b=>b.onclick=async()=>{
+    const{data:game,error}=await sb.from('games').select('*').eq('id',b.dataset.playTournament).maybeSingle();
+    if(error||!game)return toast(error?errMsg(error):'Match tounwa a pa jwenn ankò.');
+    S.mode='online';S.seek=null;S.game=game;S.role=game.p1_id===ME.id?'X':'O';
+    subscribeGame(game.id);onGame(game);
+  });
+}
+async function joinFlow(t){
+  if(!t.fee)return doJoin(t.id);
+  const{data}=await sb.from('app_settings').select('value').eq('key','natcash').maybeSingle();
+  modal(`<h2>Patisipe nan ${esc(t.name)}</h2><p>Voye <b>${t.fee} Goud</b> sou nimewo Natcash sa a:</p><p style="font-size:26px;font-weight:900">${esc(t.payment_info||data?.value||'')}</p><p>Apre w fin voye kòb la, peze bouton ki anba a. Administratè a ap valide peman w.</p><button class="bk ok" id="jOk" style="font-size:16px">MWEN VOYE KOB LA</button><button class="bk lite" onclick="closeMod()">ANILE</button>`);
+  $('#jOk').onclick=()=>doJoin(t.id);
+}
+async function doJoin(id){const{error}=await sb.rpc('join_tournament',{p_tournament:id});closeMod();if(error)toast(errMsg(error));else toast('Demann ou voye. Tann administratè a valide l.');renderTourn()}
+
+/* ---------- RANDOM ---------- */
+$('#tRand').onclick=async()=>{
+  try{
+    const{data,error}=await sb.rpc('seek_random',{p_game:null});if(error)throw error;
+    S.mode='online';S.seek=true;beginOnline(data);
+    S.poll=setInterval(pollSeek,4000);S.searchTimeout=setTimeout(fallbackToComputer,30000);
+  }catch(e){toast(errMsg(e))}
+};
+async function pollSeek(){
+  if(S.game?.status!=='waiting'){clearInterval(S.poll);return}
+  const{data,error}=await sb.rpc('seek_random',{p_game:S.game.id});
+  if(error){toast(errMsg(error));return}
+  if(data?.game)onGame(data.game);
+}
+async function fallbackToComputer(){
+  if(S.mode!=='online'||!S.seek||S.game?.status!=='waiting')return;
+  clearInterval(S.poll);const id=S.game.id;
+  try{
+    const{data:ok,error}=await sb.rpc('cancel_search',{p_game:id});if(error)throw error;
+    if(!ok){const{data:cur}=await sb.from('games').select('*').eq('id',id).maybeSingle();if(cur?.status==='playing'){onGame(cur);return}}
+    cleanup();toast('Nou pa jwenn advèsè nan 30 segonn. Chwazi yon nivo pou jwe ak òdinatè a.');startPc('beginner');
+  }catch(e){toast(errMsg(e));S.poll=setInterval(pollSeek,4000);S.searchTimeout=setTimeout(fallbackToComputer,5000)}
+}
+
+/* ---------- FRIENDS ---------- */
+let paidMode=false;
+function setPaid(p){paidMode=p;$('#fAmt').hidden=!p;$('#fFree').style.background=p?'#fff':'var(--green)';$('#fPaid').style.background=p?'var(--green)':'#fff';$('#fNb').textContent=p?'Ou sipoze mete menm kantite lajan ak zanmi w pou parenaj la fet (omwen 25 Goud). Tou 2 jwè yo dwe peye anvan match la kòmanse.':'Chak kont ka jwe 3 match gratis ak zanmi. Apre sa, omwen youn nan nou dwe gen yon peman valide sou sit la (match peye oswa tounwa peye) pou kontinye jwe gratis.'}
+$('#fFree').onclick=()=>setPaid(false);$('#fPaid').onclick=()=>setPaid(true);
+$('#tFr').onclick=()=>{setPaid(false);$('#fCode').value='';$('#fAmount').value='';$('#fMsg').textContent='';show('friends')};
+$('#fCode').addEventListener('input',e=>e.target.value=e.target.value.toUpperCase().replace(/\s/g,''));
+$('#fAmount').addEventListener('input',e=>{e.target.value=e.target.value.replace(/[^0-9]/g,'').slice(0,7)});
+$('#fGo').onclick=async()=>{
+  const code=$('#fCode').value.trim(),amt=$('#fAmount').value.replace(/\D/g,''),m=$('#fMsg');m.textContent='';
+  if(!code)return m.textContent='Antre kòd parenaj la.';
+  if(paidMode&&(!amt||Number(amt)<25))return m.textContent='Kantite minimòm lan se 25 Goud.';
+  $('#fGo').disabled=true;
+  try{
+    const{data,error}=await sb.rpc('enter_code',{p_code:code,p_amount:paidMode?amt:''});if(error)throw error;
+    if(!data?.game?.id||!['X','O'].includes(data.role))throw new Error('Nou pa rive kreye oswa jwenn match la. Verifye kòd la epi eseye ankò.');
+    S.mode='online';S.seek=false;beginOnline(data)
+  }catch(e){m.textContent=errMsg(e)}
+  $('#fGo').disabled=false;
+};
+
+/* ---------- ONLINE sync ---------- */
+function beginOnline(data){S.game=data.game;S.role=data.role;show('wait');subscribeGame(data.game.id);onGame(data.game)}
+$('#wBack').onclick=async()=>{
+  if(S.game){const{data:ok,error}=await sb.rpc('cancel_search',{p_game:S.game.id});if(error)return toast(errMsg(error));
+    if(!ok&&S.game.status==='pending_payment'){return toast('Peman an deja voye. Kontakte administratè a pou anile l.')}
+    if(!ok){const{data:c}=await sb.from('games').select('*').eq('id',S.game.id).maybeSingle();if(c?.status==='playing')return onGame(c)}}
+  goHome();
+};
+function subscribeGame(id){
+  S.chans.forEach(c=>sb.removeChannel(c));S.chans=[];
+  const ch=sb.channel('g'+id,{config:{broadcast:{self:false}}})
+   .on('postgres_changes',{event:'UPDATE',schema:'public',table:'games',filter:'id=eq.'+id},p=>onGame(p.new))
+   .on('postgres_changes',{event:'DELETE',schema:'public',table:'games'},p=>{if(S.game&&p.old.id===S.game.id&&S.game.status!=='finished'){toast('Match la anile.');goHome()}})
+   .on('postgres_changes',{event:'INSERT',schema:'public',table:'moves',filter:'game_id=eq.'+id},p=>{put(p.new.r,p.new.c,p.new.mark);if(p.new.mark!==S.role){S.turn=p.new.mark==='X'?'O':'X';markTurn()}})
+   .on('broadcast',{event:'reaction'},({payload})=>{if(payload?.role!==S.role)showReaction(payload.emoji,payload.role)})
+   .on('broadcast',{event:'chat'},({payload})=>{if(payload?.role!==S.role)showChat(payload.text,payload.role)})
+   .subscribe(st=>{if(st==='CHANNEL_ERROR'||st==='TIMED_OUT')toast('Koneksyon an pèdi. Rafrechi paj la pou rekonekte.')});
+  S.gameChannel=ch;S.chans.push(ch);
+}
+function renderWait(g){
+  const me=S.role==='X'?g.p1_name:g.p2_name,opp=S.role==='X'?g.p2_name:g.p1_name,myPaid=S.role==='X'?g.p1_paid:g.p2_paid,opPaid=S.role==='X'?g.p2_paid:g.p1_paid,pay=g.status==='pending_payment';
+  $('#oppN').textContent=opp||'AP TANN...';$('#meN').textContent=me;
+  $('#wTitle').textContent=pay?'PÈMAN':'AP TANN KONEKSYON';
+  $('#wSub').textContent=pay?'Match la kòmanse lè administratè a valide 2 peman yo.':g.seeking?'Nap chèche yon advèsè...':'Ap tann zanmi w antre menm kòd la...';
+  $('#wPay').hidden=!pay;$('#spin').style.display=pay&&myPaid&&opPaid?'none':'block';
+  [['#oppS',opPaid],['#meS',myPaid]].forEach(([s,v])=>{const e=$(s);e.hidden=!pay;e.className='nm '+(v?'yes':'no');e.querySelector('b').textContent=v?'VALIDE':'POKO'});
+  $('#pMsg2').textContent=g.status==='waiting'&&!g.seeking?'Kòd la:  '+'(kenbe l sekrè)':'';
+  if(pay)sb.from('app_settings').select('value').eq('key','natcash').maybeSingle().then(({data})=>{$('#wNum').textContent=data?.value||'';$('#wAmt').textContent='Kantite: '+g.amount+' Goud'});
+}
+function onGame(g){
+  S.game=g;S.role=g.p1_id===ME.id?'X':'O';
+  if(g.status!=='waiting'){clearTimeout(S.searchTimeout);clearInterval(S.poll)}
+  if(g.status==='waiting'||g.status==='pending_payment'){if(!$('#wait').classList.contains('on'))show('wait');renderWait(g);return}
+  const on=g.status==='playing';
+  $('#forfeit').hidden=!on;$('#reaction-toggle').hidden=!on;$('#leavePc').hidden=true;
+  if(!S.started)startGame();
+  else{S.turn=g.turn;markTurn();if(g.status==='finished')finish(g.winner,g.finish_reason)}
+  updateTurnClock(g);
+}
+function updateTurnClock(g){
+  clearInterval(S.turnClock);const clock=$('#turn-clock');
+  if(S.mode!=='online'||g.status!=='playing'||!g.turn_started_at){clock.hidden=true;return}
+  clock.hidden=false;const t0=Date.parse(g.turn_started_at);
+  const tick=()=>{const r=Math.max(0,60-Math.floor((Date.now()-t0)/1000));clock.textContent=`TAN: 00:${String(r).padStart(2,'0')}`;clock.classList.toggle('urgent',r<=10);if(r===0&&Date.now()>=S.timeoutRetryAt)claimTimeout(g.id)};
+  tick();S.turnClock=setInterval(tick,1000);
+}
+async function claimTimeout(id){
+  if(S.timeoutPending)return;S.timeoutPending=true;
+  try{
+    const{error}=await sb.rpc('timeout_game',{p_game:id});
+    if(error&&!/poko fini/.test(error.message))throw error;
+    const{data,error:e2}=await sb.from('games').select('*').eq('id',id).single();if(e2)throw e2;onGame(data);
+  }catch(e){S.timeoutRetryAt=Date.now()+5000}
+  finally{S.timeoutPending=false}
+}
+
+/* ---------- BOARD ---------- */
+const B={minR:-10,maxR:10,minC:-16,maxC:16,els:new Map(),last:null,winningCells:null,
+  px(){return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cell'))||44},
+  build(){const g=$('#grid');g.innerHTML='';this.els.clear();g.style.gridTemplateColumns=`repeat(${this.maxC-this.minC+1},var(--cell))`;
+    const f=document.createDocumentFragment();
+    for(let r=this.minR;r<=this.maxR;r++)for(let c=this.minC;c<=this.maxC;c++){const d=document.createElement('div');d.className='c';d.dataset.r=r;d.dataset.c=c;this.els.set(r+','+c,d);const m=S.stones.get(r+','+c);if(m)d.innerHTML=ICON[m];f.appendChild(d)}
+    g.appendChild(f);if(this.last)this.els.get(this.last)?.classList.add('last');
+    if(this.winningCells){this.winningCells.forEach(k=>this.els.get(k)?.classList.add('win'));this.drawWinLine(this.winningCells)}},
+  drawWinLine(cells){
+    this.winningCells=cells;
+    const g=$('#grid');g.querySelector('.win-overlay')?.remove();
+    const first=cells[0].split(',').map(Number),last=cells[cells.length-1].split(',').map(Number),p=this.px();
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','win-overlay');svg.setAttribute('aria-hidden','true');
+    svg.setAttribute('viewBox',`0 0 ${(this.maxC-this.minC+1)*p} ${(this.maxR-this.minR+1)*p}`);
+    svg.setAttribute('preserveAspectRatio','none');
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',(first[1]-this.minC+.5)*p);line.setAttribute('y1',(first[0]-this.minR+.5)*p);
+    line.setAttribute('x2',(last[1]-this.minC+.5)*p);line.setAttribute('y2',(last[0]-this.minR+.5)*p);
+    const length=Math.hypot((last[1]-first[1])*p,(last[0]-first[0])*p);
+    line.style.strokeDasharray=String(length);line.style.strokeDashoffset=String(length);line.style.animation='win-line .7s ease-out forwards';
+    svg.appendChild(line);g.appendChild(svg);
+  },
+  grow(r,c){const o={...this};let ch=false;const k=8;
+    if(r-this.minR<5){this.minR-=k;ch=true}if(this.maxR-r<5){this.maxR+=k;ch=true}
+    if(c-this.minC<5){this.minC-=k;ch=true}if(this.maxC-c<5){this.maxC+=k;ch=true}
+    if(!ch)return;const w=$('#wrap');this.build();w.scrollTop+=(o.minR-this.minR)*this.px();w.scrollLeft+=(o.minC-this.minC)*this.px()},
+  center(r,c){const w=$('#wrap'),p=this.px();w.scrollLeft=(c-this.minC)*p-w.clientWidth/2+p/2;w.scrollTop=(r-this.minR)*p-w.clientHeight/2+p/2}};
+function put(r,c,m){
+  const k=r+','+c;if(S.stones.has(k))return;
+  S.stones.set(k,m);S.count[m]++;$('#c'+m).textContent=S.count[m];B.grow(r,c);
+  if(B.last)B.els.get(B.last)?.classList.remove('last');
+  const d=B.els.get(k);d.innerHTML=ICON[m];d.classList.add('last');B.last=k;
+  const cells=winLine(r,c,m);
+  if(cells){cells.forEach((key,i)=>{const cell=B.els.get(key);cell?.classList.add('win');if(cell){cell.style.animationDelay=`${i*75}ms`;const mark=cell.querySelector('svg');if(mark)mark.style.animationDelay=`${i*75}ms`}});B.drawWinLine(cells)}
+  return cells;
+}
+function winLine(r,c,m){
+  for(const[dr,dc]of DIR){
+    const negative=[],positive=[];
+    for(let k=1;S.stones.get((r-dr*k)+','+(c-dc*k))===m;k++)negative.push((r-dr*k)+','+(c-dc*k));
+    for(let k=1;S.stones.get((r+dr*k)+','+(c+dc*k))===m;k++)positive.push((r+dr*k)+','+(c+dc*k));
+    const cells=[...negative.reverse(),r+','+c,...positive];
+    if(cells.length>=5){const start=Math.max(0,Math.min(negative.length-4,cells.length-5));return cells.slice(start,start+5)}
+  }
+  return null;
+}
+function markTurn(){$('#plX').classList.toggle('active',S.turn==='X'&&!S.over);$('#plO').classList.toggle('active',S.turn==='O'&&!S.over)}
+
+async function startGame(n1,n2){
+  S.started=true;S.over=false;S.stones=new Map();S.count={X:0,O:0};S.turn='X';B.last=null;B.winningCells=null;
+  Object.assign(B,{minR:-10,maxR:10,minC:-16,maxC:16});
+  $('#cX').textContent=$('#cO').textContent=0;
+  const levelName={beginner:'BEGINNER',hard:'HARD',pro:'PRO'};
+  $('#game-mode').textContent=S.mode==='pc'?`ÒDINATÈ · ${levelName[S.level]||'BEGINNER'}`
+    :S.mode==='online'?(S.seek===true?'JWE AK ETRANJE':S.seek===false?`JWE AK ZANMI${S.game?.amount?' · '+S.game.amount+' GOUD':''}`:'MATCH SOU ENTÈNÈT'):'';
+  if(S.mode==='pc'){$('#nX').textContent=n1;$('#nO').textContent=n2}else{$('#nX').textContent=S.game.p1_name;$('#nO').textContent=S.game.p2_name}
+  show('game');B.build();B.center(0,0);markTurn();
+  if(S.mode==='online'){
+    const{data,error}=await sb.from('moves').select('r,c,mark').eq('game_id',S.game.id).order('id');
+    if(error){S.started=false;toast(errMsg(error));return}
+    (data||[]).forEach(m=>put(m.r,m.c,m.mark));S.turn=S.game.turn;markTurn();
+    if(S.game.status==='finished')finish(S.game.winner,S.game.finish_reason);
+  }
+}
+$('#grid').addEventListener('click',async e=>{
+  const d=e.target.closest('.c');if(!d||S.over)return;
+  const r=+d.dataset.r,c=+d.dataset.c;if(S.stones.has(r+','+c))return;
+  if(S.mode==='pc'){
+    if(S.turn!==S.humanMark||S.thinking)return;
+    if(put(r,c,S.humanMark))return finish(S.humanMark);
+    S.turn=S.pcMark;markTurn();aiPlay();
+  }else{
+    if(S.turn!==S.role||S.game?.status!=='playing')return toast('Se pa tou ou.');
+    if(S.movePending)return;S.movePending=true;
+    try{
+      const{error}=await sb.rpc('play',{p_game:S.game.id,p_r:r,p_c:c});if(error)throw error;
+      put(r,c,S.role);S.turn=S.role==='X'?'O':'X';markTurn();
+      if(winLine(r,c,S.role)){const{data,error:e2}=await sb.from('games').select('*').eq('id',S.game.id).single();if(e2)throw e2;onGame(data)}
+    }catch(er){toast(errMsg(er))}
+    finally{S.movePending=false}
+  }
+});
+function finish(w,reason){
+  if(S.over)return;S.over=true;markTurn();
+  ['#forfeit','#reaction-toggle','#turn-clock','#reaction-tray','#leavePc'].forEach(s=>$(s).hidden=true);
+  const mine=S.mode==='pc'?S.humanMark:S.role;
+  $('#ovT')?.remove();
+  const t=S.mode==='pc'?(w===mine?'OU GENYEN!':'COMPUTER GENYEN')
+   :reason==='timeout'?(w===mine?'ADVÈSÈ A PRAN TWÒP TAN. OU GENYEN!':'Ou pran twòp tan pou w jwe, ou pèdi!')
+   :reason==='forfeit'?(w===mine?'OU GENYEN: ADVÈSÈ A FÈ FORFEIT':'OU TE DEKLARE FORFEIT')
+   :(w===mine?'OU GENYEN!':'OU PÈDI');
+  setTimeout(()=>{modal(`<h2>${esc(t)}</h2><button class="bk dark" id="ovB">RETOUNEN</button>`);$('#mbox').classList.add('finish-result');$('#ovB').onclick=()=>{closeMod();goHome()}},900);
+}
+$('#forfeit').onclick=async()=>{
+  if(S.mode!=='online'||S.game?.status!=='playing'||!confirm('Èske ou sèten ou vle deklare forfè? Advèsè w la ap genyen match la.'))return;
+  const b=$('#forfeit');b.disabled=true;
+  try{const{error}=await sb.rpc('forfeit_game',{p_game:S.game.id});if(error)throw error;const{data}=await sb.from('games').select('*').eq('id',S.game.id).single();onGame(data)}
+  catch(e){toast(errMsg(e))}
+  b.disabled=false;
+};
+$('#leavePc').onclick=()=>{if(confirm('Kite match la?')){S.over=true;goHome()}};
+window.addEventListener('pagehide',()=>{
+  if(S.mode!=='online'||!S.game||S.leaveSent||!TOKEN)return;
+  const fn=S.game.status==='playing'?'forfeit_game':S.game.status==='waiting'?'cancel_search':null;if(!fn)return;
+  S.leaveSent=true;
+  fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({p_game:S.game.id}),keepalive:true}).catch(()=>{});
+});
+
+/* ---------- reaksyon + mesaj ---------- */
+const REACTIONS=['😩','😂','✌🏾','🔥','⚠️','🥱','😡','🫂','💔'];
+REACTIONS.forEach(e=>{const b=document.createElement('button');b.type='button';b.className='reaction-choice';b.textContent=e;b.setAttribute('aria-label','Voye '+e);b.onclick=()=>sendReaction(e);$('#rt-e').appendChild(b)});
+$('#reaction-toggle').onclick=()=>{$('#reaction-tray').hidden=!$('#reaction-tray').hidden};
+async function bc(event,payload){if(S.mode!=='online'||S.game?.status!=='playing'||!S.gameChannel)return false;const{error}=await S.gameChannel.send({type:'broadcast',event,payload});if(error){toast(errMsg(error));return false}return true}
+async function sendReaction(emoji){if(await bc('reaction',{emoji,role:S.role})){showReaction(emoji,S.role);$('#reaction-tray').hidden=true}}
+function showReaction(emoji,role){if(!REACTIONS.includes(emoji))return;pop(emoji,role,'')}
+function pop(text,role,cls){const s=document.createElement('span');s.className=`reaction-pop ${cls} ${role==='X'?'x':'o'}`;s.textContent=text;$('#reaction-layer').appendChild(s);setTimeout(()=>s.remove(),5000)}
+function showChat(t,role){t=String(t||'').slice(0,60).trim();if(t)pop(t,role,'chat')}
+$('#chatForm').onsubmit=async e=>{
+  e.preventDefault();const t=$('#chatIn').value.trim().slice(0,60);if(!t)return;
+  if(Date.now()-S.lastChat<1500)return toast('Tann yon ti moman anvan w voye lòt mesaj.');
+  if(await bc('chat',{text:t,role:S.role})){S.lastChat=Date.now();showChat(t,S.role);$('#chatIn').value='';$('#reaction-tray').hidden=true}
+};
+
+/* ---------- COMPUTER: 3 nivo ---------- */
+$('#mbox').addEventListener('click',()=>{});
+document.querySelectorAll('.lvlBtn').forEach(b=>b.onclick=()=>modal(`<h2>Chwazi nivo a</h2>
+ <button class="bk lite" data-lv="beginner">BEGINNER<small style="text-transform:none;font-weight:500"> · fasil</small></button>
+ <button class="bk lite" data-lv="hard">HARD<small style="text-transform:none;font-weight:500"> · difisil</small></button>
+ <button class="bk dark" data-lv="pro">PRO<small style="text-transform:none;font-weight:500"> · computer a kòmanse an premye</small></button>
+ <button class="bk lite" onclick="closeMod()" style="border-color:#aaa;color:#555">ANILE</button>`));
+$('#mbox').addEventListener('click',e=>{const b=e.target.closest('[data-lv]');if(b){closeMod();startPc(b.dataset.lv)}});
+function startPc(lv){
+  cleanup();S.mode='pc';S.level=lv;
+  S.pcMark=lv==='pro'?'X':'O';S.humanMark=S.pcMark==='X'?'O':'X';
+  const me=ME?.username||'OU MENM';
+  startGame(S.pcMark==='X'?'COMPUTER':me,S.pcMark==='X'?me:'COMPUTER');
+  $('#leavePc').hidden=false;
+  if(S.pcMark==='X')setTimeout(aiPlay,500);
+}
+const DIR=[[1,0],[0,1],[1,1],[1,-1]],K=(r,c)=>r+','+c,OPP=m=>m==='X'?'O':'X';
+function patB(bd,r,c,m){
+  const get=(a,b)=>bd.get(K(a,b));let tot=0;
+  for(const[dr,dc]of DIR){
+    let n=1,open=0,gaps=0;
+    for(const s of[1,-1]){let gap=0;
+      for(let k=1;k<=5;k++){const v=get(r+dr*k*s,c+dc*k*s);
+        if(v===m)n++;
+        else if(!v){if(!gap&&get(r+dr*(k+1)*s,c+dc*(k+1)*s)===m){gap=1;continue}open++;break}
+        else break}
+      gaps+=gap}
+    if(n>=5&&gaps){n=4;open=1}
+    tot+=n>=5?1e7:n===4?(open===2?1e5:open===1?1e4:0):n===3?(open===2?4000:open===1?400:0):n===2?(open===2?200:open===1?20:0):(open===2?8:1)}
+  return tot}
+function five(bd,r,c,m){for(const[dr,dc]of DIR){let n=1;for(const s of[1,-1]){let k=1;while(bd.get(K(r+dr*k*s,c+dc*k*s))===m){n++;k++}}if(n>=5)return true}return false}
+function cands(bd,rad=2){const s=new Set();for(const k of bd.keys()){const[r,c]=k.split(',').map(Number);for(let i=-rad;i<=rad;i++)for(let j=-rad;j<=rad;j++){const q=K(r+i,c+j);if(!bd.has(q))s.add(q)}}return[...s].map(q=>q.split(',').map(Number))}
+function ranked(bd,me,n){
+  const op=OPP(me),a=cands(bd).map(([r,c])=>{const at=patB(bd,r,c,me),df=patB(bd,r,c,op);return{r,c,at,df,s:at*1.1+df}});
+  const w=a.find(x=>x.at>=1e7);if(w)return[w];const b=a.find(x=>x.df>=1e7);if(b)return[b];
+  a.sort((x,y)=>y.s-x.s);return a.slice(0,n)}
+const TB=[0,1,15,300,1e4,1e7],TO=[0,8,150,3000,1e5,1e7];
+function evalB(bd,me){let sc=0;
+  for(const[k,m]of bd){const[r,c]=k.split(',').map(Number);
+    for(const[dr,dc]of DIR){if(bd.get(K(r-dr,c-dc))===m)continue;let n=0;while(bd.get(K(r+dr*n,c+dc*n))===m)n++;
+      const o=(!bd.get(K(r-dr,c-dc))?1:0)+(!bd.get(K(r+dr*n,c+dc*n))?1:0);if(!o&&n<5)continue;
+      const v=n>=5?1e7:(o===2?TO[n]:TB[n]);sc+=m===me?v:-v*1.05}}
+  return sc}
+function ab(bd,d,al,be,turn,me,cx){
+  if(performance.now()>cx.t){cx.out=true;return 0}
+  if(d===0)return evalB(bd,me);
+  const L=ranked(bd,turn,cx.w[d]||4);if(!L.length)return 0;
+  const max=turn===me;let best=max?-Infinity:Infinity;
+  for(const{r,c}of L){
+    bd.set(K(r,c),turn);
+    const v=five(bd,r,c,turn)?(max?1:-1)*(1e8+d):ab(bd,d-1,al,be,OPP(turn),me,cx);
+    bd.delete(K(r,c));if(cx.out)return 0;
+    if(max){if(v>best)best=v;al=Math.max(al,v)}else{if(v<best)best=v;be=Math.min(be,v)}
+    if(be<=al)break}
+  return best}
+function comps(bd,r,c,m){const out=new Map();
+  for(const[dr,dc]of DIR)for(let s=-4;s<=0;s++){let n=0,cnt=0,e=null,bad=false;
+    for(let i=0;i<5;i++){const rr=r+dr*(s+i),cc=c+dc*(s+i),v=bd.get(K(rr,cc));if(v===m)n++;else if(!v){cnt++;e=[rr,cc]}else{bad=true;break}}
+    if(!bad&&n===4&&cnt===1)out.set(K(e[0],e[1]),e)}
+  return[...out.values()]}
+function vcf(bd,me,d,tEnd){
+  if(d<=0||performance.now()>tEnd)return null;const op=OPP(me);
+  for(const[r,c]of cands(bd)){
+    bd.set(K(r,c),me);let res=null;
+    if(five(bd,r,c,me))res=[r,c];
+    else{const cp=comps(bd,r,c,me);
+      if(cp.length>=2)res=[r,c];
+      else if(cp.length===1){const[br,bc]=cp[0];bd.set(K(br,bc),op);
+        if(!five(bd,br,bc,op)&&!comps(bd,br,bc,op).length&&vcf(bd,me,d-1,tEnd))res=[r,c];
+        bd.delete(K(br,bc))}}
+    bd.delete(K(r,c));if(res)return res}
+  return null}
+function rootSearch(bd,me,depths,roots,tEnd,w){
+  let best=[roots[0].r,roots[0].c];
+  for(const d of depths){const cx={t:tEnd,out:false,w};let bs=-Infinity,bm=null;
+    for(const{r,c}of roots){bd.set(K(r,c),me);const v=five(bd,r,c,me)?1e9:ab(bd,d-1,-Infinity,Infinity,OPP(me),me,cx);bd.delete(K(r,c));if(cx.out)break;if(v>bs){bs=v;bm=[r,c]}}
+    if(cx.out)break;if(bm)best=bm;if(bs>=1e8)break}
+  return best}
+function aiMove(lv,me){
+  const bd=new Map(S.stones),op=OPP(me);
+  if(!bd.size)return[0,0];
+  if(lv==='beginner'){
+    const all=ranked(bd,me,200),x=all[0],rnd=Math.random();
+    if(x.at>=1e7&&rnd<.8)return[x.r,x.c];
+    if(x.df>=1e7&&rnd<.55)return[x.r,x.c];
+    if(rnd<.45){const n=cands(bd,1);const p=n[Math.floor(Math.random()*n.length)];return p}
+    const top=all.slice(0,10),p=top[Math.floor(Math.random()*top.length)];return[p.r,p.c]}
+  const pro=lv==='pro',tEnd=performance.now()+(pro?1500:700);
+  const L=ranked(bd,me,pro?12:10);
+  if(L.length===1&&(L[0].at>=1e7||L[0].df>=1e7))return[L[0].r,L[0].c];
+  let roots=L;
+  if(pro){
+    const w=vcf(bd,me,8,tEnd);if(w)return w;
+    const safe=L.filter(({r,c})=>{bd.set(K(r,c),me);const bad=!comps(bd,r,c,me).length&&vcf(bd,op,6,tEnd);bd.delete(K(r,c));return!bad});
+    if(safe.length)roots=safe}
+  return rootSearch(bd,me,pro?[2,4,6]:[3],roots,tEnd,{1:4,2:6,3:8,4:8,5:6});
+}
+function aiPlay(){
+  if(S.over)return;S.thinking=true;
+  const clock=$('#turn-clock');clock.hidden=false;clock.textContent='AP REFLECHI...';
+  setTimeout(()=>{
+    if(S.over||S.mode!=='pc'){S.thinking=false;return}
+    const[r,c]=aiMove(S.level,S.pcMark);const w=put(r,c,S.pcMark);B.center(r,c);
+    S.thinking=false;clock.hidden=true;
+    if(w)return finish(S.pcMark);
+    S.turn=S.humanMark;markTurn()},40);
+}
+setAuth(false);
+</script>
+</body>
+</html>
